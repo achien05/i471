@@ -13,5 +13,5 @@ fi
 # python3 ./lexer2.py $1
 
 # uncomment following line for java
-# java ./lexer2.java $1
+java ./lexer2.java $1
 
