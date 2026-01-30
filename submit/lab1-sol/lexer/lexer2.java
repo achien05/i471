@@ -9,7 +9,7 @@ public class Lexer {
 
   //it is imperative that each regex starts with a  ^ to anchor
   //the match to the start of the string
-  private static final Pattern WS_RE = Pattern.compile("^\\s+|//");
+  private static final Pattern WS_RE = Pattern.compile("^\\s+|//.*");
   private static final Pattern INT_RE = Pattern.compile("^\\d+");
   private static final Pattern ID_RE = Pattern.compile("^[_a-zA-Z][_a-zA-Z0-9]*");
   private static final Pattern CHAR_RE = Pattern.compile("^.");
