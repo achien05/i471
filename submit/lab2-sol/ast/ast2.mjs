@@ -46,12 +46,12 @@ function parse(text) {
   }
 
   function program() {
-    const values = [];
+    const asts = [];
     while (!peek('EOF')) {
-      values.push(expr());
+      asts.push(expr());
       consume(';');
     }
-    return values;
+    return asts;
   }
 
   function expr() {
@@ -60,7 +60,7 @@ function parse(text) {
       const kind = lookahead.kind;
       consume(kind);   
       const t1 = term();
-      t += (kind === '+') ? t1 : -t1;
+      t = new Ast(kind, t, t1);
     }
     return t;
   }
@@ -68,20 +68,20 @@ function parse(text) {
   function term() {
     if (peek('-')) {
       consume('-');
-      return - term();
+      return new Ast('-', term());
     }
     else {
       return expn();
     }
   }
-  
-  function expn() {		//9 + 2 ** 3;
-    let t = factor();			//evaluate the 2 first		evaluate 3 not **,so it does the else branch, return 3 aka t
-    if (peek('**')) {			//if **
-      const kind = lookahead.kind;		//spend token
+
+  function expn() {
+    let t = factor();
+    if (peek('**')) {
+      const kind = lookahead.kind;
       consume(kind);   
       const t1 = expn();			//recursive call for 3
-      return t ** t1;
+      return new Ast(kind, t, t1);
     }
     else{
       return t;
@@ -92,7 +92,9 @@ function parse(text) {
     if (peek('INT')) {
       const value = parseInt(lookahead.lexeme);
       consume('INT');
-      return value;
+      const ast = new Ast('INT');
+      ast.value = value;
+      return ast;
     }
     else {
       consume('(');
@@ -125,12 +127,11 @@ function scan(text) {
   return tokens;
 }
 
-
 const CHAR_SET = 'utf8';
 function main() {
   if (process.argv.length !== 3) usage();
   const file = process.argv[2];
-  const text = fs.readFileSync(file === '-' ? 0 : file, CHAR_SET);
+  const text = fs.readFileSync(file, CHAR_SET);
   const value = parse(text);
   console.log(JSON.stringify(value));
 }
@@ -147,5 +148,11 @@ class Token {
   }
 }
 
+class Ast {
+  constructor(tag, ...kids) {
+    if (kids.length === 0) kids = undefined;
+    Object.assign(this, {tag, kids});
+  }
+}
 main();
 

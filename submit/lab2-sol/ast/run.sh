@@ -7,7 +7,7 @@ then
 fi
 
 # uncomment following line for javascript
-# node ./ast2.mjs $1
+ node ./ast2.mjs $1
 
 # uncomment following line for python
 # python3 ./ast2.py $1
