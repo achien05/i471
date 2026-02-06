@@ -7,7 +7,7 @@ then
 fi
 
 # uncomment following line for javascript
-# node ./calc2.mjs $1
+ node ./calc2.mjs $1
 
 # uncomment following line for python
 # python3 ./calc2.py $1
