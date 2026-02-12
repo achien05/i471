@@ -1,0 +1,37 @@
+%{ [:a, 22] => { [1, 2, 3], :x },
+   x: [99, %{ a: 33 }]
+}
+map(keypair(list(atom, primitive), tuple(list(3primitives, atom))), key-list(primitive, map))
+
+{ [1, 2], {:a, 22}, %{ a: 99, :b => 11} }
+tuple(list(2 primitive),tuple(atom, primitive), map(key-primitive, keypair(atom,primitive)))
+
+[ {1, 2}, %{[:x] => 33, b: 44}, :c, [], [:d, 55] ]
+list(tuple(2primitive), map(keypair(list(atom), primitive),key-primitive), atom, list, list(atom,primitive))
+dL((dL|kP)+)
+dL
+lL | tL | mL | pL
+lL
+[ (dL,)* dL ]
+tL
+{ (dL,)* dL }
+mL
+% { (kP,)*
+kP
+keyDL | dL => dL
+pL
+int | atom | key | boolean
+
+Sentence:									//save values as needed
+	DL:
+	peek({) consume({) <internal rules w/ DL> consume(})
+	peek([) consume([) <internal rules w/ DL> consume(])
+	peek(%) consume(%) consume({) <internals w/ KP> consume(})
+	else pL
+	KP:
+	peek(key) consume(key) DL	//iffiest so far
+	DL peek("=>") consume("=>") DL
+	PL:
+	peek(<type>) branch
+	
+
