@@ -12,7 +12,7 @@
 ;;(simple-interest balance interest-rate): return the balance
 ;;after a single simple interest payment at interest-rate %.
 (define (simple-interest balance interest-rate)
-  'TODO
+  (* balance (+ 1 (/ interest-rate 100)))
 )
 
 ;;return the amount resulting of an investment of an initial principal p,
@@ -20,12 +20,12 @@
 ;;for a total of t time periods. 
 ;;<https://www.nerdwallet.com/calculator/compound-interest-calculator>
 (define (compound-interest p r n t)
-  'TODO
+  (* p (expt (+ 1 (/ r 100 n)) (* n t)))
 )
 
 ;;return 3*x**3 + -2*x**2 + 4*x -1
 (define (poly-eval x)
-  'TODO
+  (- (+ (- (* 3 (expt x 3)) (* 2 (expt x 2))) (* 4 x)) 1)
 )
 
 (provide append-tails first-elements first-longest line-length)

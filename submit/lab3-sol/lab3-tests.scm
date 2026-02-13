@@ -24,7 +24,7 @@
   (check-equal? (round-n (simple-interest 1000.0 3.56)) 1035.6)
   (check-equal? (round-n (simple-interest 1234.6 5.0)) 1296.33)
 )
-;(simple-interest-tests)
+(simple-interest-tests)
 
 
 (define (compound-interest-tests)
@@ -32,7 +32,7 @@
   (check-equal? (round-n (compound-interest 1000.0 5 12 5) 2) 1283.36)
   (check-equal? (round-n (compound-interest 1000.0 5 365 5) 2) 1284.00)
 )
-;(compound-interest-tests)
+(compound-interest-tests)
 
 
 (define (poly-eval-tests)
@@ -40,7 +40,7 @@
   (check-equal? (poly-eval 4) 175)
   (check-equal? (poly-eval 1) 4)
   (check-equal? (poly-eval 2) 23))
-;(poly-eval-tests)
+(poly-eval-tests)
 
 
 (define (append-tails-tests)
