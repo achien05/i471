@@ -35,14 +35,14 @@
 ;;`list2` returns the result of appending the tail of `list2` to the
 ;;tail of `list1`.
 (define (append-tails list1 list2)
-  'TODO
+  (append (cdr list1) (cdr list2))
 )
 
 ;;(first-elements list1 list2): given two non-empty lists `list1` and
 ;;`list2` returns the two-element list containing the heads of `list1`
 ;;and `list2`.
 (define (first-elements list1 list2)
-  'TODO
+  (list (car list1) (car list2))
 )
 
 ;;(first-longest list1 list2): given two non-empty lists
@@ -50,12 +50,15 @@
 ;;length is greater than that of `list2`, else it returns the first
 ;;element of `list2`.
 (define (first-longest list1 list2)
-  'TODO
+  (if (> (length list1)(length list2))
+  	(car list1)
+  	(car list2)
+  )
 )
 
 ;;(line-length pt0 pt1): return the length of a line between 2D-points
 ;;`pt0` and `pt1` where each point is represented as a two-element
 ;;list `(x y)` containing its coordinates `x` and `y`.
 (define (line-length pt0 pt1)
-  'TODO
+  (sqrt (+ (expt (- (car pt0)(car pt1)) 2) (expt (- (cadr pt0)(cadr pt1)) 2)))
 )

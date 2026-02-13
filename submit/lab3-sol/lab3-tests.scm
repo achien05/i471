@@ -47,23 +47,23 @@
   (check-equal? (append-tails '(1 2 3) '(a b c)) '(2 3 b c))
   (check-equal? (append-tails '(1) '(a b c)) '(b c))
   (check-equal? (append-tails '(1) '(a)) '()))
-;(append-tails-tests)
+(append-tails-tests)
 
 (define (first-elements-tests)
   (check-equal? (first-elements '(1 2 3) '(a b c)) '(1 a))
   (check-equal? (first-elements '(1) '(a b c)) '(1 a))
   (check-equal? (first-elements '(1) '(a)) '(1 a)))
-;(first-elements-tests)
+(first-elements-tests)
 
 
 (define (first-longest-tests)
   (check-equal? (first-longest '(1 2 3 4) '(a b c)) 1)
   (check-equal? (first-longest '(1 2 3 ) '(a b c d)) 'a)
   (check-equal? (first-longest '(1 2 3 ) '(a b c)) 'a))
-;(first-longest-tests)
+(first-longest-tests)
 
 (define (line-length-tests)
   (check-equal? (round-n (line-length '(0.0 0.0) '(3.0 4.0))) 5.0)
   (check-equal? (round-n (line-length '(1.0 1.0) '(13.0 6.0))) 13.0)
 )
-;(line-length-tests)
+(line-length-tests)
