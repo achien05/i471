@@ -24,14 +24,40 @@ int | atom | key | boolean
 
 Sentence:									//save values as needed
 	DL:
-	peek({) consume({) <internal rules w/ DL> consume(})
-	peek([) consume([) <internal rules w/ DL> consume(])
-	peek(%) consume(%) consume({) <internals w/ KP> consume(})
+	if peek({)
+		consume({) <internal rules w/ DL> consume(})				//tuple
+	if peek([)
+		consume([) <internal rules w/ DL> consume(])				//list
+	if peek(%)
+		consume(%) peek({) consume({) <internals w/ KP> consume(})	//map
 	else pL
 	KP:
-	peek(key) consume(key) DL	//iffiest so far
-	DL peek("=>") consume("=>") DL
+	if peek(key)
+		consume(key) DL	//iffiest so far
+	else DL peek("=>") consume("=>") DL
 	PL:
-	peek(<type>) branch
+	peek(<type>) branch across types (like with factor in lab)
+
+sentence:
+: (dL)*
+| #empty
+;
+dL:
+: '{' (dL,)* dL? '}'
+| '[' (dL,)* dL? ']'
+| '%' '{' (kP,)* kP? '}'
+| pL
+;
+kP:
+: dL '=''>' dL
+| dL dL				//key needs distinguishing?
+;
+pL:
+: INTEGER
+| ATOM
+| KEY
+| BOOLEAN
+;
+
 	
 

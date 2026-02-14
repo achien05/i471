@@ -43,10 +43,77 @@ def parse(text):
         while (not peek('EOF')):
             asts.append(dataLiteral())
         return asts
-
     def dataLiteral():
-        
+        if(peek('{')):
+            consume('{')
+            while()
+                t = dataLiteral()
+                consume(',')
+            if()
+                t1 = dataLiteral()
+            #peek('}')
+            consume('}')
+            t = Ast(kind, t, t1)
+        elif(peek('[')):
+            consume('[')
+            while()
+                t = dataLiteral()
+                consume(',')
+            if()
+                t1 = dataLiteral()
+            #peek(']')
+            consume(']')
+            t = Ast(kind, t, t1)
+        elif(peek('%')):
+            consume('%')
+            #peek('{')
+            consume('{')
+            while()
+                t = keyPair()
+                consume(',')
+            if()
+                t1 = keyPair()
+            #peek('}')
+            consume('}')
+            t = Ast(kind, t, t1)
+        else:
+            t = primitiveLiteral()
         return t
+    def keyPair()
+        t = dataLiteral()
+        if(peek('KEY')):
+            t1 = dataLiteral()
+            t = Ast(kind, t, t1)
+        else:
+            consume('=')
+            consume('>')
+            t1 = dataLiteral
+            t = Ast(kind, t, t1)
+        return t
+    def primitiveLiteral()
+        if(peek('BOOL')):
+            value = bool(lookahead.lexeme)
+            consume('BOOL')
+            ast = Ast('BOOL')
+            ast['value'] = value
+        elif(peek('INT')):
+            value = int(lookahead.lexeme)
+            consume('INT')
+            ast = Ast('INT')
+            ast['value'] = value
+        elif(peek('KEY')):
+            value = lookahead.lexeme
+            consume('KEY')
+            ast = Ast('KEY')
+            ast['value'] = value
+        else:
+            value = lookahead.lexeme
+            consume('ATOM')
+            ast = Ast('ATOM')
+            ast['value'] = value
+
+        
+    
 
     #begin parse()
     tokens = scan(text)
@@ -68,6 +135,8 @@ def scan(text):
     def next_match(text):
         m = SPACE_RE.match(text)
         if (m): return (m, None)
+        m = BOOL_RE.match(text)
+        if (m): return (m, 'BOOL')
         m = ATOM_RE.match(text)
         if (m): return (m, 'ATOM')
         m = KEY_RE.match(text)
@@ -88,7 +157,7 @@ def scan(text):
 def main():
 #    if (len(sys.argv) != 2): usage();
 #   contents = readFile(sys.argv[1]);
-    text = input()
+    text = sys.stdin.read()
     asts = parse(text)
     print(json.dumps(asts, separators=(',', ':'))) #no whitespace
 
