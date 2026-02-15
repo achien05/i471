@@ -9,9 +9,9 @@ import json
 #Sentence: dL*			parser
 #dL: lL|tL|mL|pL               	parser Include all Literals except primitive
 #pL: int|atom|bool           	parser
-#lL: \[ (dl, )* dl \]          	parser
-#tL: \{ (dl, )* dl \}          	parser
-#mL: \% \{ (kp, )* kp? \}       parser
+#lL: [ (dl, )* dl ]          	parser
+#tL: { (dl, )* dl }          	parser
+#mL: \% { (kp, )* kp? }       parser
 #kP: dL => dL | keydL          	parser
 #int: \d+(_*\d+)*            
 #atom: :[_a-zA-Z][_0-9a-zA-Z]*
@@ -19,7 +19,7 @@ import json
 #bool: true|false
 
 def parse(text):
-
+    
     def peek(kind): return lookahead.kind == kind
     def consume(kind):
         nonlocal lookahead
@@ -46,73 +46,86 @@ def parse(text):
     def dataLiteral():
         if(peek('{')):
             consume('{')
-            while()
+            if(peek('{') or peek('[') or peek('%') or peek('INT') or peek('BOOL') or peek('ATOM')):
                 t = dataLiteral()
-                consume(',')
-            if()
-                t1 = dataLiteral()
-            #peek('}')
+                while(peek(',')):
+                    consume(',')
+                    t1 = dataLiteral()
+                    t = Ast("tuple", t, t1)
+                #peek('}')
+            else:
+                t = Ast("tuple", "[]")
             consume('}')
-            t = Ast(kind, t, t1)
         elif(peek('[')):
             consume('[')
-            while()
+            if(peek('{') or peek('[') or peek('%') or peek('INT') or peek('BOOL') or peek('ATOM')):
                 t = dataLiteral()
-                consume(',')
-            if()
-                t1 = dataLiteral()
+                while(peek(',')):
+                    consume(',')
+                    t1 = dataLiteral()                
+                    t = Ast("list", t, t1)
+            else:
+                t = Ast("list", "[]")
             #peek(']')
             consume(']')
-            t = Ast(kind, t, t1)
         elif(peek('%')):
             consume('%')
             #peek('{')
             consume('{')
-            while()
+            if(peek('KEY') or peek('ATOM')):
                 t = keyPair()
-                consume(',')
-            if()
-                t1 = keyPair()
+                while(peek(',')):
+                    consume(',')
+                    t1 = keyPair()
+                    t = Ast("map", t, t1)
+            else:
+                t = Ast("map", "[]")
             #peek('}')
             consume('}')
-            t = Ast(kind, t, t1)
         else:
             t = primitiveLiteral()
         return t
-    def keyPair()
-        t = dataLiteral()
+    def keyPair():
         if(peek('KEY')):
+            t = atom()
             t1 = dataLiteral()
-            t = Ast(kind, t, t1)
+            t = Ast("atom", t, t1)
         else:
+            t = atom()
             consume('=')
             consume('>')
             t1 = dataLiteral
-            t = Ast(kind, t, t1)
-        return t
-    def primitiveLiteral()
+            t = Ast("atom", t, t1)
+        #return t
+    def primitiveLiteral():
         if(peek('BOOL')):
             value = bool(lookahead.lexeme)
             consume('BOOL')
             ast = Ast('BOOL')
-            ast['value'] = value
+            ast["%v"] = value
+            return ast
         elif(peek('INT')):
             value = int(lookahead.lexeme)
             consume('INT')
             ast = Ast('INT')
-            ast['value'] = value
-        elif(peek('KEY')):
+            ast["%v"] = value
+            return ast
+        else:
+            t = atom()
+            return t
+    def atom():
+        if(peek('KEY')):
             value = lookahead.lexeme
             consume('KEY')
-            ast = Ast('KEY')
-            ast['value'] = value
+            ast = Ast('ATOM')
+            ast["%v"] = value
+            return ast    
         else:
             value = lookahead.lexeme
             consume('ATOM')
             ast = Ast('ATOM')
-            ast['value'] = value
-
-        
+            ast["%v"] = value
+            return ast
     
 
     #begin parse()
@@ -127,7 +140,7 @@ def parse(text):
 
 def scan(text):
     SPACE_RE = re.compile(r'\s+|#.*')
-    INT_RE = re.compile(r'\d+(_*\d+)*')
+    INT_RE = re.compile(r'\d+(_\d+)*')
     ATOM_RE = re.compile(r':[_a-zA-Z][_0-9a-zA-Z]*')
     KEY_RE = re.compile(r'[_a-zA-Z][_0-9a-zA-Z]*:')
     BOOL_RE = re.compile(r'true|false')
@@ -157,7 +170,8 @@ def scan(text):
 def main():
 #    if (len(sys.argv) != 2): usage();
 #   contents = readFile(sys.argv[1]);
-    text = sys.stdin.read()
+    #text = sys.stdin.read()
+    text = input()
     asts = parse(text)
     print(json.dumps(asts, separators=(',', ':'))) #no whitespace
 
@@ -173,7 +187,7 @@ def usage():
 
 #use a dict so that we can add attributes dynamically
 def Ast(tag, *kids):
-    return { 'tag': tag, } if len(kids) == 0 else { 'tag': tag, 'kids': kids }
+    return { '%k': tag, } if len(kids) == 0 else { '%k': tag, '%v': kids }
 
 Token = namedtuple('Token', ['kind', 'lexeme'])
 

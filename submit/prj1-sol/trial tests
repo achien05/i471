@@ -43,21 +43,25 @@ sentence:
 | #empty
 ;
 dL:
-: '{' (dL,)* dL? '}'
-| '[' (dL,)* dL? ']'
-| '%' '{' (kP,)* kP? '}'
-| pL
+: '{' (dL,)* dL? '}'		//tL
+| '[' (dL,)* dL? ']'		//lL
+| '%' '{' (kP,)* kP? '}'	//mL
+| pL						//pL
 ;
 kP:
-: dL '=''>' dL
-| dL dL				//key needs distinguishing?
+: dL '=''>' dL				//atom => dL
+| atom dL					//key dL
 ;
 pL:
-: INTEGER
-| ATOM
-| KEY
-| BOOLEAN
+: BOOLEAN					//true | false
+| INTEGER					//(digit*_)* digit as in pure numerical int
+| atom
 ;
+atom:
+: ATOM
+| KEY
+;
+
 
 	
 
