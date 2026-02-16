@@ -43,9 +43,9 @@ sentence:
 | #empty
 ;
 dL:
-: '{' (dL,)* dL? '}'		//tL
-| '[' (dL,)* dL? ']'		//lL
-| '%' '{' (kP,)* kP? '}'	//mL
+: '{' dl? (,dL)* '}'		//tL
+| '[' dl? (,dL)* ']'		//lL
+| '%' '{' kP? (,kP)* '}'	//mL
 | pL						//pL
 ;
 kP:
