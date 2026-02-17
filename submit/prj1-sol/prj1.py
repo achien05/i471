@@ -45,68 +45,131 @@ def parse(text):
         return asts
     def dataLiteral():
         if(peek('tuple')):
-            kind = lookahead.kind
-            consume('tuple')
-            #if(not peek('}')):
-            #    t = dataLiteral()
-            #    while(peek(',')):
-            #        consume(',')
-            #        t1 = dataLiteral()
-            #        t = Ast(kind, t, t1)
-            #else:
-            #    t = Ast(kind)
-            consume('}')
+            return tupleLiteral()
         elif(peek('list')):
-            kind = lookahead.kind
-            consume('list')
-            #if(not peek(']')):
-            #    t = dataLiteral()
-            #    while(peek(',')):
-            #        consume(',')
-            #        t1 = dataLiteral()                
-            #        t = Ast(kind, t, t1)
-            #else:
-            #    t = Ast(kind)
-            consume(']')
+            return listLiteral()
         elif(peek('map')):
-            kind = lookahead.kind
-            consume('map')
-            #if(not peek('}')):
-            #    t = keyPair()
-            #    while(peek(',')):
-            #        consume(',')
-            #        t1 = keyPair()
-            #        t = Ast(kind, t, t1)
-            #else:
-            #    t = Ast(kind)
-            consume('}')
+            return mapLiteral()
         else:
-            t = primitiveLiteral()
+            return primitiveLiteral()
+    #def dataLiteral():
+    #    if(peek('tuple')):
+    #        kind = lookahead.kind
+    #        consume('tuple')
+    #        if(not peek('}')):
+            #if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
+    #            t = dataLiteral()
+    #            while(peek(',')):
+    #                consume(',')
+    #                t1 = dataLiteral()
+    #                t = Ast(kind, t, t1)
+    #        else:
+    #            t = Ast(kind)
+    #        consume('}')
+    #    elif(peek('list')):
+    #        kind = lookahead.kind
+    #        consume('list')
+            #if(not peek(']')):
+    #       if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
+    #            
+    #            while(peek(',')):
+    #                consume(',')
+    #                t1 = dataLiteral()                
+    #                t = Ast(kind, t, t1)
+    #        else:
+    #            t = Ast(kind)
+    #        consume(']')
+    #    elif(peek('map')):
+    #        kind = lookahead.kind
+    #        consume('map')
+    #        if(not peek('}')):
+            #if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
+    #            t = keyPair()
+    #            while(peek(',')):
+    #                consume(',')
+    #                t1 = keyPair()
+    #                t = Ast(kind, t, t1)
+    #        else:
+    #            t = Ast(kind)
+    #        consume('}')
+    #    else:
+    #        t = primitiveLiteral()
+    #    return t
+    def tupleLiteral():
+        kind = lookahead.kind
+        consume('tuple')
+        if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
+            t = dataLiteral()
+            t2 = [t]
+            t = Ast(kind)
+            while(peek(',')):
+                consume(',')
+                t1 = dataLiteral()
+                t2.append(t1)
+            t['%v']=tuple(t2)
+        else:
+            t = Ast(kind)
+        consume('}')
         return t
+    
+    def listLiteral():
+        kind = lookahead.kind
+        consume('list')
+        if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
+            t = dataLiteral()
+            t2 = [t]
+            t = Ast(kind)
+            while(peek(',')):
+                consume(',')
+                t1 = dataLiteral()
+                t2.append(t1)
+            t['%v']=tuple(t2)
+        else:
+            t = Ast(kind)
+        consume(']')
+        return t
+    
+    def mapLiteral():
+        kind = lookahead.kind
+        consume('map')
+        if(peek('KEY') or peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
+            t = keyPair()
+            t2 = [t]
+            t = Ast(kind)
+            while(peek(',')):
+                consume(',')
+                t1 = keyPair()
+                t2.append(t1)
+            t['%v']=tuple(t2)
+        else:
+            t = Ast(kind)
+        consume('}')
+        return t
+    
     def keyPair():
         if(peek('KEY')):
             t = atom()
             t1 = dataLiteral()
-            t = Ast("atom", t, t1)
         else:
-            kind = lookahead.kind
             t = dataLiteral()
             consume('=')
             consume('>')
             t1 = dataLiteral()
-            t = Ast(kind, t, t1)
-        return t
+        return [t,t1]
+    
     def primitiveLiteral():
         if(peek('bool')):
+            kind = lookahead.kind
             value = lookahead.lexeme
             consume('bool')
-            ast = Ast('bool')
+            ast = Ast(kind)
             ast["%v"] = value.lower() == "true"
             return ast
         elif(peek('int')):
+            kind = lookahead.kind
             value = int(lookahead.lexeme)
             consume('int')
-            ast = Ast('int')
+            ast = Ast(kind)
             ast["%v"] = value
             return ast
         elif(peek('atom')):
@@ -115,21 +178,22 @@ def parse(text):
         else:
             print("indeterminate value")
             sys.exit(1)
+    
     def atom():
         if(peek('KEY')):
             value = lookahead.lexeme
             consume('KEY')
             ast = Ast('atom')
-            ast["%v"] = value
+            ast["%v"] = value[-1]+value[:-1]
             return ast    
         else:
+            kind = lookahead.kind
             value = lookahead.lexeme
             consume('atom')
-            ast = Ast('atom')
+            ast = Ast(kind)
             ast["%v"] = value
             return ast
     
-
     #begin parse()
     tokens = scan(text)
     index = 0
@@ -148,7 +212,7 @@ def scan(text):
     INT_RE = re.compile(r'\d+(_\d+)*')
     ATOM_RE = re.compile(r':[_a-zA-Z][_0-9a-zA-Z]*')
     KEY_RE = re.compile(r'[_a-zA-Z][_0-9a-zA-Z]*:')
-    BOOL_RE = re.compile(r'\wtrue\w|\wfalse\w')
+    BOOL_RE = re.compile(r'\btrue\b|\bfalse\b')
     CHAR_RE = re.compile(r'.')
     def next_match(text):
         m = SPACE_RE.match(text)

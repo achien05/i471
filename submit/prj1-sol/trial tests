@@ -43,10 +43,19 @@ sentence:
 | #empty
 ;
 dL:
-: '{' dl? (,dL)* '}'		//tL
-| '[' dl? (,dL)* ']'		//lL
-| '%' '{' kP? (,kP)* '}'	//mL
+: tL
+| lL
+| mL
 | pL						//pL
+;
+tL:
+: '{' dl? (,dL)* '}'		//tL
+;
+lL:
+: '[' dl? (,dL)* ']'		//lL
+;
+mL:
+: '%{' kP? (,kP)* '}'	//mL
 ;
 kP:
 : dL '=''>' dL				//atom => dL
