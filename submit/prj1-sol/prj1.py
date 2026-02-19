@@ -1,22 +1,8 @@
 #!/usr/bin/env python3
-#problem areas in comments int list, tuple, and map
 import re
 import sys
 from collections import namedtuple
 import json
- 
-#whitespace and #: \w*|#.*
-#Sentence: dL*			parser
-#dL: lL|tL|mL|pL               	parser Include all Literals except primitive
-#pL: int|atom|bool           	parser
-#lL: [ (dl, )* dl ]          	parser
-#tL: { (dl, )* dl }          	parser
-#mL: \% { (kp, )* kp? }       parser
-#kP: dL => dL | keydL          	parser
-#int: \d+(_*\d+)*            
-#atom: :[_a-zA-Z][_0-9a-zA-Z]*
-#key: [_a-zA-Z][_0-9a-zA-Z]*:
-#bool: \wtrue\w|\wfalse\w
 
 def parse(text):
     
@@ -52,49 +38,7 @@ def parse(text):
             return mapLiteral()
         else:
             return primitiveLiteral()
-    #def dataLiteral():
-    #    if(peek('tuple')):
-    #        kind = lookahead.kind
-    #        consume('tuple')
-    #        if(not peek('}')):
-            #if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
-    #            t = dataLiteral()
-    #            while(peek(',')):
-    #                consume(',')
-    #                t1 = dataLiteral()
-    #                t = Ast(kind, t, t1)
-    #        else:
-    #            t = Ast(kind)
-    #        consume('}')
-    #    elif(peek('list')):
-    #        kind = lookahead.kind
-    #        consume('list')
-            #if(not peek(']')):
-    #       if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
-    #            
-    #            while(peek(',')):
-    #                consume(',')
-    #                t1 = dataLiteral()                
-    #                t = Ast(kind, t, t1)
-    #        else:
-    #            t = Ast(kind)
-    #        consume(']')
-    #    elif(peek('map')):
-    #        kind = lookahead.kind
-    #        consume('map')
-    #        if(not peek('}')):
-            #if(peek('tuple') or peek('list') or peek('map') or peek('bool') or peek('int') or peek('atom')):
-    #            t = keyPair()
-    #            while(peek(',')):
-    #                consume(',')
-    #                t1 = keyPair()
-    #                t = Ast(kind, t, t1)
-    #        else:
-    #            t = Ast(kind)
-    #        consume('}')
-    #    else:
-    #        t = primitiveLiteral()
-    #    return t
+
     def tupleLiteral():
         kind = lookahead.kind
         consume('tuple')
@@ -243,19 +187,9 @@ def scan(text):
     return tokens
 
 def main():
-#    if (len(sys.argv) != 2): usage();
-#   contents = readFile(sys.argv[1]);
-    #text = sys.stdin.read()
     text = sys.stdin.read()
     asts = parse(text)
-    #sys.stdout.write(json.dumps(asts, separators=(',', ':')))
     print(json.dumps(asts, separators=(',', ':'))) #no whitespace
-
-#def readFile(path):
-#    with open(path, 'r') as file:
-#        content = file.read()
-#    return content
-
 
 def usage():
     print(f'usage: {sys.argv[0]} DATA_FILE')

@@ -1,0 +1,31 @@
+sentence:
+: (dL)*
+;
+dL:
+: tL
+| lL
+| mL
+| pL						//pL
+;
+tL:
+: '{' dl? (,dL)* '}'		//tL
+;
+lL:
+: '[' dl? (,dL)* ']'		//lL
+;
+mL:
+: '%{' kP? (,kP)* '}'	//mL
+;
+kP:
+: dL '=''>' dL				//atom => dL
+| atom dL					//key dL
+;
+pL:
+: BOOLEAN					//true | false
+| INTEGER					//(digit*_)* digit as in pure numerical int
+| atom
+;
+atom:
+: ATOM
+| KEY
+;

@@ -6,5 +6,4 @@
 
 # No submitted files will be executable; ensure that this script works
 # under those conditions.
-./prj1.py $1
-
+python3 prj1.py
