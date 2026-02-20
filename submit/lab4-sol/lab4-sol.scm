@@ -23,7 +23,13 @@
 ;; < n3`.  It should return `#f` if there is some triple in `triples`
 ;; which is not strictly ordered.
 (define (ordered-triples1? triples)
-  'TODO)
+  (if (null? triples)
+  	#t
+  	(and (match (car triples) [(list n1 n2 n3) (< n1 n2 n3)])
+  	     (ordered-triples1? (cdr triples))
+  	)
+  )
+)
 
 
 ;; Given a list `triples` of number triples, the predicate
@@ -32,7 +38,14 @@
 ;; < n3`.  It should return `#f` if there is some triple in `triples`
 ;; which is not strictly ordered.  All recursion *must* be tail-recursive.
 (define (ordered-triples2? triples)
-  'TODO)
+	(define (aux-ordered-triples2? acc triples)
+		(if (null? triples)
+			acc
+			(aux-ordered-triples2? (and acc (match (car triples) [(list n1 n2 n3) (< n1 n2 n3)])) (cdr triples))
+		)
+	)
+	(aux-ordered-triples2? #t triples)
+)
 
 
 ;; Given a list `triples` of number triples, the function
@@ -41,7 +54,8 @@
 ;; being `#t` iff the corresponding triple in `triples` is strictly
 ;; ordered.  Cannot directly use recursion.
 (define (map-ordered-triples triples)
-  'TODO)
+	(map (lambda (triple) (< (car triple) (cadr triple) (caddr triple))) triples)
+)
 
 
 
@@ -49,5 +63,9 @@
 ;; specification as the earlier `ordered-triples[12]` but must
 ;; be implemented using `foldl`.
 (define (ordered-triples3? triples)
-  'TODO)
+	(foldl 	(lambda (triple acc)(and acc(< (car triple)(cadr triple)(caddr triple)))) 
+		#t 
+		triples
+	)
+)
 
