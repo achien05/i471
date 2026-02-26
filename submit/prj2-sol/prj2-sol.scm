@@ -114,7 +114,7 @@
           (if (null? inlist)
             acc
             (aux-expt-list1 (cdr inlist) (expt (car inlist) acc))))])
-    (inner-expt-list (foldl cons '() list) 1)))
+    (inner-expt-list (reverse list) 1)))
 
 ;; #5: "5-points"
 ;;
