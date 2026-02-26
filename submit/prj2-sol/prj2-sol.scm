@@ -77,7 +77,11 @@
 ;; # of pairs in e (the total count of all subexpressions in e for
 ;; which (pair? e) is true).
 (define (count-pairs e)
-  'TODO)
+  (cond [(null? e) 0]
+        [(pair? e) (+ 1 (count-pairs (car e)) (count-pairs (cdr e)))]
+        [else 'error]
+  )
+)
 
 
 ;; #3: "5-points"
@@ -89,7 +93,9 @@
 ;;
 ;; *Hint*: recurse on h
 (define (tetrate a h)
-  'TODO)
+  (if (= h 0)
+    a
+    (expt a (tetrate a h-1))))
 
 ;; #4: "7-points"
 ;;
@@ -102,8 +108,13 @@
 ;;
 ;; *Hint*: reverse the list.
 (define (expt-list1 list)
-  'TODO)
-
+  (letrec
+      ([aux-expt-list1 
+	      (lambda (inlist acc)
+          (if (null? inlist)
+            acc
+            (aux-expt-list1 (cdr inlist) (expt (car inlist) acc))))])
+    (inner-expt-list (foldl cons '() list) 1)))
 
 ;; #5: "5-points"
 ;;
@@ -115,7 +126,11 @@
 ;;
 ;; *Hint*: use a fold.
 (define (expt-list2 list)
-  'TODO)
+  (if (= (length list) 0)
+    1
+    (foldr expt 1 list)
+  )
+)
 
 ;; #6: "5-points"
 ;;
