@@ -67,7 +67,9 @@
 ;;
 ;; return list[index] if index < length list, else return default
 (define (nth list index (default 0))
-  'TODO)
+  (if (<= (length list) index)
+    default
+    (list-ref list index)))
 
 ;; #2: "5-points"
 ;;
