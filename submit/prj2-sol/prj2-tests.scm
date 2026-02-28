@@ -187,16 +187,16 @@
 
 (define (run-tests)
   ;; activate tests once function is implemented
-  #t ;remove this line once tests activate
-  ;; (nth-tests)
-  ;; (count-pairs-tests)
-  ;; (tetrate-tests)
-  ;; (expt-list1-tests)
-  ;; (expt-list2-tests)
-  ;; (fill-list-tests)
-  ;; (strip-end-eq-tests)
-  ;; (add-coeffs-tests)
-  ;; (int-pairs-tests)
+  ;;#t ;remove this line once tests activate
+   (nth-tests)
+   (count-pairs-tests)
+   (tetrate-tests)
+   (expt-list1-tests)
+   (expt-list2-tests)
+   (fill-list-tests)
+   (strip-end-eq-tests)
+   (add-coeffs-tests)
+   (int-pairs-tests)
   ;; (product-coeff-tests)
   ;; (mul-coeffs-tests)
   ;; (poly-expr-coeffs-tests)

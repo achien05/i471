@@ -77,9 +77,8 @@
 ;; # of pairs in e (the total count of all subexpressions in e for
 ;; which (pair? e) is true).
 (define (count-pairs e)
-  (cond [(null? e) 0]
-        [(pair? e) (+ 1 (count-pairs (car e)) (count-pairs (cdr e)))]
-        [else 'error]
+  (cond [(pair? e) (+ 1 (count-pairs (car e)) (count-pairs (cdr e)))]
+        [else 0]
   )
 )
 
@@ -94,8 +93,8 @@
 ;; *Hint*: recurse on h
 (define (tetrate a h)
   (if (= h 0)
-    a
-    (expt a (tetrate a h-1))))
+    1
+    (expt a (tetrate a (- h 1)))))
 
 ;; #4: "7-points"
 ;;
@@ -109,12 +108,12 @@
 ;; *Hint*: reverse the list.
 (define (expt-list1 list)
   (letrec
-      ([aux-expt-list1 
+      ([aux-expt-list 
 	      (lambda (inlist acc)
           (if (null? inlist)
             acc
-            (aux-expt-list1 (cdr inlist) (expt (car inlist) acc))))])
-    (inner-expt-list (reverse list) 1)))
+            (aux-expt-list (cdr inlist) (expt (car inlist) acc))))])
+    (aux-expt-list (reverse list) 1)))
 
 ;; #5: "5-points"
 ;;
@@ -128,9 +127,7 @@
 (define (expt-list2 list)
   (if (= (length list) 0)
     1
-    (foldr expt 1 list)
-  )
-)
+    (foldr expt 1 list)))
 
 ;; #6: "5-points"
 ;;
@@ -140,7 +137,7 @@
 ;;
 ;; Hint: use map with range
 (define (fill-list n (fill 0))
-  'TODO)
+  (map (lambda (x) fill) (range n)))
 
 ;; #7 "7-points"
 ;;
@@ -150,7 +147,15 @@
 ;;
 ;; *Hint*: use reverse and memf with not eq?
 (define (strip-end-eq list (val 0))
-  'TODO)
+  (if (and (list? list) (> (length list) 0))
+    (if (list? (memf (lambda (x) (not (eq? x val))) (reverse list)))
+      (reverse (memf (lambda (x) (not (eq? x val))) (reverse list)))
+      '()
+    )
+    '()
+  )
+)
+
 
 ;; #8: "13-points"
 ;;
@@ -162,7 +167,11 @@
 ;; *Hint*: use a map to return list of pairs of elements from
 ;; lists (0 ... n) (n ... 0)
 (define (int-pairs n)
-  'TODO)
+  (if (= n 0)
+    '((0 0))
+    (map (lambda (x y) (list x y)) (range (+ n 1)) (reverse (range (+ n 1))))
+  )
+)
 
 
 ;; An nth-degree polynomial a_0 + a_1*x^1 + a_2*x^2 + ... + a_n*x^n
@@ -183,7 +192,10 @@
 ;;   to access coeff.
 ;;   Use strip-end-eq to remove trailing zeros.
 (define (add-coeffs coeffs1 coeffs2)
-  'TODO)
+    (cond [(> (length coeffs1) (length coeffs2)) (strip-end-eq (map + coeffs1 (append coeffs2 (fill-list (- (length coeffs1) (length coeffs2)) 0))))] 
+          [(< (length coeffs1) (length coeffs2)) (strip-end-eq (map + coeffs2 (append coeffs1 (fill-list (- (length coeffs2) (length coeffs1)) 0))))] 
+          [(= (length coeffs1) (length coeffs2)) (strip-end-eq (map + coeffs1 coeffs2))]))  
+  
 
 ;; #10: "15-points"
 ;; Given polynomials p1 and p2 determined by coeff-lists coeffs1 and coeffs2,
