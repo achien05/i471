@@ -206,7 +206,8 @@
 ;; product elements, form list of products by mapping over pairs
 ;; (using nth to extract coeff) and finally fold + over the products.
 (define (product-coeff coeffs1 coeffs2 n)
-  'TODO)
+  (foldl + 0 (map (lambda (P) (* (nth coeffs1 (car Pair)) (nth coeffs2 (cadr Pair)))) (int-pairs n)))
+)
 
 ;; #11: "10-points"
 ;;
@@ -217,7 +218,8 @@
 ;; *Hint*: map product-coeff over appropriate range; use strip-end-eq
 ;; to remove trailing zeros.
 (define (mul-coeffs coeffs1 coeffs2)
-  'TODO)
+  (map (lambda (n) (product-coeff coeffs1 coeffs2 n)) (range (+ 1 (- (length coeffs1) 1) (- (length coeffs2) 1))))
+)
 
 
 ;; A PolyExpr is represented using the following EBNF grammar (where
