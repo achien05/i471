@@ -197,9 +197,9 @@
    (strip-end-eq-tests)
    (add-coeffs-tests)
    (int-pairs-tests)
-  ;; (product-coeff-tests)
-  ;; (mul-coeffs-tests)
-  ;; (poly-expr-coeffs-tests)
+   (product-coeff-tests)
+   (mul-coeffs-tests)
+   (poly-expr-coeffs-tests)
 )
 
 

@@ -206,7 +206,7 @@
 ;; product elements, form list of products by mapping over pairs
 ;; (using nth to extract coeff) and finally fold + over the products.
 (define (product-coeff coeffs1 coeffs2 n)
-  (foldl + 0 (map (lambda (P) (* (nth coeffs1 (car Pair)) (nth coeffs2 (cadr Pair)))) (int-pairs n)))
+  (foldl + 0 (map (lambda (P) (* (nth coeffs1 (car P)) (nth coeffs2 (cadr P)))) (int-pairs n)))
 )
 
 ;; #11: "10-points"
@@ -218,7 +218,7 @@
 ;; *Hint*: map product-coeff over appropriate range; use strip-end-eq
 ;; to remove trailing zeros.
 (define (mul-coeffs coeffs1 coeffs2)
-  (map (lambda (n) (product-coeff coeffs1 coeffs2 n)) (range (+ 1 (- (length coeffs1) 1) (- (length coeffs2) 1))))
+  (strip-end-eq (map (lambda (n) (product-coeff coeffs1 coeffs2 n)) (range (+ 1 (- (length coeffs1) 1) (- (length coeffs2) 1)))))
 )
 
 
@@ -251,4 +251,14 @@
 ;;     using mul-coeffs.
 ;;   Otherwise simply return poly-expr unchanged
 (define (poly-expr-coeffs poly-expr)
-  'TODO)
+  (cond [(integer? poly-expr) (list poly-expr)]
+        [(symbol? poly-expr) (list 0 1)]
+        [(and (eq? (car poly-expr) 'expt) (integer? (caddr poly-expr)))
+            (append (fill-list (caddr poly-expr)) (list 1))]
+        [(and (eq? (car poly-expr) '+))
+          (foldl add-coeffs '(0) (map (lambda (polyExpr) (poly-expr-coeffs polyExpr)) (cdr poly-expr)))]
+        [(and (eq? (car poly-expr) '*))
+          (foldl mul-coeffs '(1) (map (lambda (polyExpr) (poly-expr-coeffs polyExpr)) (cdr poly-expr)))]
+        [else poly-expr]
+  )
+)
