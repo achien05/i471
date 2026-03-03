@@ -77,10 +77,7 @@
 ;; # of pairs in e (the total count of all subexpressions in e for
 ;; which (pair? e) is true).
 (define (count-pairs e)
-  (cond [(pair? e) (+ 1 (count-pairs (car e)) (count-pairs (cdr e)))]
-        [else 0]
-  )
-)
+  (if (pair? e) (+ 1 (count-pairs (car e)) (count-pairs (cdr e))) 0))
 
 
 ;; #3: "5-points"
@@ -137,7 +134,7 @@
 ;;
 ;; Hint: use map with range
 (define (fill-list n (fill 0))
-  (map (lambda (x) fill) (range n)))
+  (let ([ran (range n)]) (map (lambda (x) fill) ran)))
 
 ;; #7 "7-points"
 ;;
@@ -148,10 +145,11 @@
 ;; *Hint*: use reverse and memf with not eq?
 (define (strip-end-eq list (val 0))
   (if (and (list? list) (> (length list) 0))
-    (if (list? (memf (lambda (x) (not (eq? x val))) (reverse list)))
-      (reverse (memf (lambda (x) (not (eq? x val))) (reverse list)))
+    (let ([x (memf (lambda (x) (not (eq? x val))) (reverse list))])
+    (if (list? x)
+      (reverse x)
       '()
-    )
+    ))
     '()
   )
 )
@@ -169,7 +167,7 @@
 (define (int-pairs n)
   (if (= n 0)
     '((0 0))
-    (map (lambda (x y) (list x y)) (range (+ n 1)) (reverse (range (+ n 1))))
+    (let* ([a (range (+ n 1))] [ra (reverse a)]) (map (lambda (x y) (list x y)) a ra))
   )
 )
 
@@ -192,9 +190,10 @@
 ;;   to access coeff.
 ;;   Use strip-end-eq to remove trailing zeros.
 (define (add-coeffs coeffs1 coeffs2)
-    (cond [(> (length coeffs1) (length coeffs2)) (strip-end-eq (map + coeffs1 (append coeffs2 (fill-list (- (length coeffs1) (length coeffs2)) 0))))] 
-          [(< (length coeffs1) (length coeffs2)) (strip-end-eq (map + coeffs2 (append coeffs1 (fill-list (- (length coeffs2) (length coeffs1)) 0))))] 
-          [(= (length coeffs1) (length coeffs2)) (strip-end-eq (map + coeffs1 coeffs2))]))  
+    (let* ([c1 (length coeffs1)] [c2 (length coeffs2)]
+          [a (if (> c1 c2) (append coeffs2 (fill-list (- c1 c2) 0)) coeffs2)]
+          [b (if (< c1 c2) (append coeffs1 (fill-list (- c2 c1) 0)) coeffs1)]) 
+    (strip-end-eq (map + a b))))  
   
 
 ;; #10: "15-points"
@@ -206,7 +205,8 @@
 ;; product elements, form list of products by mapping over pairs
 ;; (using nth to extract coeff) and finally fold + over the products.
 (define (product-coeff coeffs1 coeffs2 n)
-  (foldl + 0 (map (lambda (P) (* (nth coeffs1 (car P)) (nth coeffs2 (cadr P)))) (int-pairs n)))
+  (let ([p (int-pairs n)])
+  (foldl + 0 (map (lambda (P) (* (nth coeffs1 (car P)) (nth coeffs2 (cadr P)))) p)))
 )
 
 ;; #11: "10-points"
@@ -218,7 +218,8 @@
 ;; *Hint*: map product-coeff over appropriate range; use strip-end-eq
 ;; to remove trailing zeros.
 (define (mul-coeffs coeffs1 coeffs2)
-  (strip-end-eq (map (lambda (n) (product-coeff coeffs1 coeffs2 n)) (range (+ 1 (- (length coeffs1) 1) (- (length coeffs2) 1)))))
+  (let ([r (range (+ 1 (- (length coeffs1) 1) (- (length coeffs2) 1)))]) 
+    (strip-end-eq (map (lambda (n) (product-coeff coeffs1 coeffs2 n)) r)))
 )
 
 
