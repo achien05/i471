@@ -1,5 +1,5 @@
-#  Lab 5 Solution
+#  Lab 5: Managing Memory; Templates
 
-**`Name:    `** Solution <br> 
-**`B-Number:`** B01234567 <br>
-**`BU-Email:`** do-not-use@binghamton.edu <br>
+**`Name:    `** Andrew Chien <br> 
+**`B-Number:`** B01008515 <br>
+**`BU-Email:`** achien@binghamton.edu <br>
