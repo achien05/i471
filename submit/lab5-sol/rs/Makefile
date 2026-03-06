@@ -1,4 +1,4 @@
-RSC = rustc
+RSC =? rustc
 
 RS_FILES := $(wildcard *.rs)
 EXES = $(RS_FILES:%.rs=%)
