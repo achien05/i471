@@ -46,5 +46,15 @@ fn main() {
     //constructed point (constructed using Point {x: x, y: y } onto
     //points and the square of the magnitude of the point onto
     //pt_sq_mag.  Finally println points and pt_sq_mag.
-
+    let mut points: Vec<Point> = Vec::new();
+    let mut pt_sq_mag: Vec<i32> = Vec::new();
+    for i in (0..ints.len()).step_by(2) {
+	let x = ints[i];
+	let y = ints[i + 1];
+	points.push(Point{x: x, y: y});
+	pt_sq_mag.push(x*x + y*y);
+    }
+    
+    println!("{}", vec_str(&points));
+    println!("{}", vec_str(&pt_sq_mag));
 }
