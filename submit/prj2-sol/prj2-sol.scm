@@ -67,7 +67,7 @@
 ;;
 ;; return list[index] if index < length list, else return default
 (define (nth list index (default 0))
-  (if (<= (length list) index)
+  (if (or (< index 0)(<= (length list) index))
     default
     (list-ref list index)))
 
