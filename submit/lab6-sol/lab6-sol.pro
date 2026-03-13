@@ -24,27 +24,27 @@
 
 % #1
 % cons_list_car(Ls, Hd): succeed iff Hd matches the head of cons-list Ls.
-cons_list_car(_Ls, _Hd) :- 'TODO'.
+cons_list_car(_Ls, _Hd) :- cons(_Hd,_) = _Ls.
 
 % #2
 % cons_list_cadr(Ls, Cadr): succeed iff Cadr matches the scheme
 % cadr of cons-list Ls.
-cons_list_cadr(_Ls, _Cadr) :- 'TODO'.
+cons_list_cadr(_Ls, _Cadr) :- cons(_,cons(_Cadr, _)) = _Ls.
 
 % #3
 % cons_list_cddr(Ls, Cddr): succeed iff Cddr matches the scheme
 % cddr of cons-list Ls.
-cons_list_cddr(_Ls, _Cddr) :- 'TODO'.
+cons_list_cddr(_Ls, _Cddr) :- cons(_,cons(_, _Cddr)) = _Ls.
 
 % The following problems should use regular Prolog list syntax.
 
 % #4
 % caddr(List, Caddr): succeed iff Caddr matches the Scheme caddr of List.
-caddr(_List, _Caddr) :- 'TODO'.
+caddr(_List, _Caddr) :- [_|[_|[_Caddr|_]]] = _List.
 
 % #5
 % cdar(List, Cdar): succeed iff Cdar matches the Scheme cdar of List.
-cdar(_List, _Cdar) :- 'TODO'.
+cdar(_List, _Cdar) :- [[_|_Cdar]|_] = _List.
 
 % #6
 % procedure length_second(List, Len): succeed iff Len
@@ -53,25 +53,26 @@ cdar(_List, _Cdar) :- 'TODO'.
 % Hint: use pattern matching on List to extract its second
 % element Second and then use length(Second, Len) to match
 % Len with the length of Second.
-length_second(_List, _Len) :- 'TODO'.
+length_second(_List, _Len) :- [_|[Second|_]]=_List, length(Second, _Len).
 
 % #7
 % area(Shape, Area): succeed iff Area matches the area of Shape,
 % for Shape in rect(Width, Height) and circle(Radius).
-area(_Shape, _Area) :- 'TODO'.
+area(_Shape, _Area) :- rect(Width, Height) = _Shape, _Area is Width*Height.
+area(_Shape, _Area) :- circle(Radius) = _Shape, _Area is pi*Radius*Radius.
 
 % #8
 % sum_lengths(List, LensSum): assuming that each element of List is
 % itself a list, succeed iff LensSum matches the sum of the lengths of
 % the lists in List.
-sum_lengths(_List, _LensSum) :- 'TODO'.
+sum_lengths(_List, _LensSum) :- []=_List, 0 = _LensSum.
+sum_lengths(_List, _LensSum) :- [H|T]=_List, length(H, TLensSum), sum_lengths(T, LLensSum), _LensSum is LLensSum+TLensSum.
 
 % #9
 % sum_list(List, Sum): succeed iff Sum matches the sum of the numbers in
 % number-list Sum.  *Must* be implemented as a wrapper which simply
 % calls a tail-recursive sum_list(List, Acc, Sum) which succeeds
 % if Sum matches the sum of Acc and the numbers in number-list List.
-sum_list(_List, _Sum) :- 'TODO'.
-sum_list(_List, _Acc, _Sum) :- 'TODO'.
-
-
+sum_list(_List, _Sum) :- sum_list(_List, 0, _Sum).
+sum_list(_List, _Acc, _Sum) :- []=_List, _Acc=_Sum.
+sum_list(_List, _Acc, _Sum) :- [H|T]=_List, X is H+_Acc, sum_list(T, X, _Sum).
