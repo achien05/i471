@@ -44,7 +44,7 @@ procedures.
 % as in IntList.
 % *Restriction*: cannot use recursion.
 % *Hint*:  use a Prolog built-in which was covered in class.
-greater_than_element(_IntList, _N, _Z) :- 'TODO'.
+greater_than_element(_IntList, _N, _Z) :- member(_Z, _IntList), _Z @> _N.
 
 % #2: "10-points"
 % greater_thans(IntList, N, GtList): GtList is a sub-list of
@@ -53,12 +53,14 @@ greater_than_element(_IntList, _N, _Z) :- 'TODO'.
 % The elements in GtList must be in the same order in which they occur
 % in IntList.
 % Hint: `X =< Y` can be used to check if `X` is less-than-or-equal-to `Y`.
-greater_thans(_IntList, _N, _GtList) :- 'TODO'.
-
+greater_thans([], _, []).
+greater_thans(_IntList, _N, _GtList) :- [Head|Tail]=_IntList, Head @> _N, greater_thans(Tail, _N, Rtn), [Head|Rtn] = _GtList.
+greater_thans(_IntList, _N, _GtList) :- [Head|Tail]=_IntList, Head @=< _N, greater_thans(Tail, _N, Rtn), Rtn = _GtList.
 
 % #3: "10-points"
 % List is a list consisting of N Fill elements.
-fill_list(_N, _Fill, _List):- 'TODO'.
+fill_list(0, _Fill, []).
+fill_list(_N, _Fill, _List):- _N @> 0, _M is _N - 1, fill_list(_M, _Fill, Rtn), [_Fill|Rtn] = _List.
 
 % #4: 10-points"
 % rm_prefix(List, X, ListZ): ListZ matches List without its prefix of

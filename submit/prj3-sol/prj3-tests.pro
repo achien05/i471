@@ -7,7 +7,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%% greater_than_element/3 %%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(greater_than_element, [blocked('TODO')]).
+:- begin_tests(greater_than_element, []).
 test(three, [all(X == [9, 22, 8])]) :- 
     greater_than_element([2, 9, 22, 7, 8 ], 7, X).
 test(all, [all(X == [2, 9, 22, 7, 8])]) :- 
@@ -22,7 +22,7 @@ test(empty, [all(X == [])]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% greater_thans/3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(greater_thans, [blocked('TODO')]).
+:- begin_tests(greater_thans, []).
 test(three, [all(X == [[9, 22, 8]])]) :- 
     greater_thans([2, 9, 22, 7, 8 ], 7, X).
 test(all, [all(X == [[2, 9, 22, 7, 8]])]) :- 
@@ -37,7 +37,7 @@ test(empty, [all(X == [[]])]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% fill_list/3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(fill_list, [blocked('TODO')]).
+:- begin_tests(fill_list, []).
 test(zero_3, [all(X == [[0, 0, 0]])]) :- 
     fill_list(3, 0, X).
 test(seven_5, [all(X == [[7, 7, 7, 7, 7]])]) :- 
