@@ -52,7 +52,7 @@ test(empty, [all(X == [[]])]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% rm_prefix/3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(rm_prefix, [blocked('TODO')]).
+:- begin_tests(rm_prefix, []).
 test(zero_3, [all(X == [[7, 0, 0, 0]])]) :- 
     rm_prefix([0, 0, 0, 7, 0, 0, 0], 0, X).
 test(atom_3, [all(X == [[7, 0, 0, 0]])]) :- 
@@ -69,7 +69,7 @@ test(empty, [all(X == [[]])]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% rm_suffix/3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(rm_suffix, [blocked('TODO')]).
+:- begin_tests(rm_suffix, []).
 test(zero_3, [all(X == [[0, 0, 0, 7]])]) :- 
     rm_suffix([0, 0, 0, 7, 0, 0, 0], 0, X).
 test(atom_3, [all(X == [[7, 0, 0, 0]])]) :- 

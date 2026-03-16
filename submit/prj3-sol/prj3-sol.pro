@@ -65,11 +65,13 @@ fill_list(_N, _Fill, _List):- _N @> 0, _M is _N - 1, fill_list(_M, _Fill, Rtn), 
 % #4: 10-points"
 % rm_prefix(List, X, ListZ): ListZ matches List without its prefix of
 % all elements which match X.
-rm_prefix(_List, _X, _ListZ):- 'TODO'.
+rm_prefix([], _, []).
+rm_prefix(_List, _X, _ListZ):- [Head|Tail]=_List, Head = _X, rm_prefix(Tail, _X, Rtn), Rtn = _ListZ.
+rm_prefix(_List, _X, _ListZ):- [Head|Tail]=_List, Head \= _X, _List = _ListZ.
 
 % #5: "5-points"
 % ListZ is List with any suffix elements equal to End removed.
-rm_suffix(_List, _X, _ListZ):- 'TODO'.
+rm_suffix(_List, _X, _ListZ):- reverse(_List, RevList), rm_prefix(RevList, _X, OrigList), reverse(OrigList, _ListZ).
 
 
 % #6: 15-points
