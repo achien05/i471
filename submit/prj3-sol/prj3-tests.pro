@@ -199,7 +199,7 @@ test(bad_exp_op, [fail]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% left_assoc/2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(left_assoc, [blocked('TODO')]).
+:- begin_tests(left_assoc, []).
 test(int, [all(X == [1])]) :- 
     left_assoc(1, X).
 test(simple, [all(X == [1+2])]) :- 

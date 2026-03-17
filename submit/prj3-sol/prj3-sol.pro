@@ -137,6 +137,14 @@ aux_poly_coeffs(Poly, Var, OaccList, Coeffs):- +(Rest, X) = Poly, *(Coeff, Exp) 
 % *Hints*:
 %    A + (B + C) ==> (A + B) + C.
 %    integer/1 succeeds if its argument is an integer
-%left_assoc(PlusTerm, LeftAssocTerm):- +(A,D)=PlusTerm, integer(A), integer(D), +(A,D) = LeftAssocTerm.
-%left_assoc(PlusTerm, LeftAssocTerm):- +(A,D)=PlusTerm, integer(A), left_assoc(D, RtnVal), +(A,RtnVal) = LeftAssocTerm. 
-%left_assoc(PlusTerm, LeftAssocTerm):- +(A,D)=PlusTerm, integer(D), left_assoc(A, RtnVal), +(RtnVal,D) = LeftAssocTerm.
+left_assoc(PlusTerm, LeftAssocTerm):- list_left_assoc(PlusTerm,[], RtnList), build_left_assoc(RtnList, LeftAssocTerm).
+list_left_assoc(PlusTerm, AccList, NewAccList):- integer(PlusTerm), append(AccList, [PlusTerm], NewAccList).
+list_left_assoc(PlusTerm, AccList, BAccList):- +(A,B)=PlusTerm, list_left_assoc(A, AccList, AAccList), list_left_assoc(B, AAccList, BAccList).
+build_left_assoc(List, LeftAssocTerm):- length(List, 1), member(LeftAssocTerm, List).
+build_left_assoc(List, LeftAssocTerm):- [First|[Second|Rest]]=List, +(First, Second)=AccAdd, build_inner_left_assoc(Rest, AccAdd, LeftAssocTerm).
+build_inner_left_assoc([], AccAdd, AccAdd).
+build_inner_left_assoc(List, AccAdd, LeftAssocTerm):- [First|Rest]=List, +(AccAdd, First)=NewAccAdd, build_inner_left_assoc(Rest, NewAccAdd, LeftAssocTerm).
+
+
+
+
