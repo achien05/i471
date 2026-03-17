@@ -71,7 +71,7 @@ rm_prefix(_List, _X, _ListZ):- [Head|Tail]=_List, Head \= _X, _List = _ListZ.
 
 % #5: "5-points"
 % ListZ is List with any suffix elements equal to End removed.
-rm_suffix(_List, _X, _ListZ):- reverse(_List, RevList), rm_prefix(RevList, _X, OrigList), reverse(OrigList, _ListZ).
+rm_suffix(_List, _X, _ListZ):- reverse(_List, RevList), rm_prefix(RevList, _X, TrimmedList), reverse(TrimmedList, _ListZ).
 
 
 % #6: 15-points
@@ -92,7 +92,13 @@ rm_suffix(_List, _X, _ListZ):- reverse(_List, RevList), rm_prefix(RevList, _X, O
 % Vocab.  Vocab is a list of Prolog terms of the form:
 % adjective(ADJECTIVE), article(ARTICLE), noun(NOUN), verb(VERB).
 % Hint: use member/2 and append/3.
-sentence(_Vocab, _Sentence):- 'TODO'.
+sentence(_Vocab, _Sentence):- noun_phrase(_Vocab, X), verb_phrase(_Vocab, Y), append(X, Y, _Sentence).
+noun_phrase(_Vocab, _NounPhrase):- member(article(X), _Vocab), member(adjective(Y), _Vocab), member(noun(Z), _Vocab), [X, Y, Z] = _NounPhrase.
+noun_phrase(_Vocab, _NounPhrase):- member(article(X), _Vocab), member(noun(Z), _Vocab), [X, Z] = _NounPhrase.
+noun_phrase(_Vocab, _NounPhrase):- member(adjective(X), _Vocab), member(noun(Z), _Vocab), [X, Z] = _NounPhrase.
+noun_phrase(_Vocab, _NounPhrase):- member(noun(Z), _Vocab), [Z] = _NounPhrase.
+verb_phrase(_Vocab, _VerbPhrase):- member(verb(X), _Vocab), [X] = VP, noun_phrase(_Vocab, NP), append(VP, NP, _VerbPhrase).
+verb_phrase(_Vocab, _VerbPhrase):- member(verb(X), _Vocab), [Y] = _VerbPhrase.
 
 % #7: 10-points
 % sum_to(I, J, N): I, J and N are positive integers such that N = I + J.

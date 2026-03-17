@@ -91,7 +91,7 @@ vocab([article(a), article(the),
        noun(man), noun(woman),
        verb(loves), verb(hates)]).
 
-:- begin_tests(sentence, [blocked('TODO')]).
+:- begin_tests(sentence, []).
 test(n_v, [nondet]) :-
     vocab(Vocab),
     sentence(Vocab, [man, loves]).
