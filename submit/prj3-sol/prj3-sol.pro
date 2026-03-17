@@ -107,14 +107,16 @@ verb_phrase(_Vocab, _VerbPhrase):- member(verb(X), _Vocab), [Y] = _VerbPhrase.
 % Answers must be generated in increasing order by I.
 % *Restriction*: must consist of a single rule.
 % *Hint*: use builtin between/3.
-sum_to(_I, _J, _N) :- 'TODO'.
+sum_to(_I, _J, _N) :- X is _N-1, between(1, X, _I), _J is _N-_I.
 
 % #8: 10-points
 % sum_pairs(N, SumPairs): Given positive integer N, SumPairs is a list
 % of pairs [I, J] with I, J > 0 and I + J == N, ordered in increasing
 % order by I.
 % Hint: use an auxiliary recursive procedure.
-sum_pairs(_N, _SumPairs):- 'TODO'.
+sum_pairs(_N, _SumPairs):- aux_sum_pairs(_N, 1, [], _SumPairs).
+aux_sum_pairs(_N, _N, _SumPairs, _SumPairs).
+aux_sum_pairs(_N, X, OaccList, _SumPairs):- sum_to(X, Y, _N), Xsucc is X+1, append(OaccList, [[X,Y]], NaccList), aux_sum_pairs(_N, Xsucc, NaccList, _SumPairs).
 
 % #9: 10-points
 % poly_coeffs(Poly, Var, Coeffs): Given a polynomial

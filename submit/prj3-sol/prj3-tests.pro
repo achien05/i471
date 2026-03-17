@@ -156,7 +156,7 @@ test(bad_vocab, [fail]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sum_to/3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(sum_to, [blocked('TODO')]).
+:- begin_tests(sum_to, []).
 test(all_4, [all(X == [[1,3], [2,2], [3,1]])]) :- 
     sum_to(I, J, 4), X = [I, J].
 test(all_7, [all(X == [[1,6], [2,5], [3,4], [4, 3], [5, 2], [6, 1]])]) :- 
@@ -173,7 +173,7 @@ test(too_small, [fail]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% sum_pairs/2 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(sum_pairs, [blocked('TODO')]).
+:- begin_tests(sum_pairs, []).
 test(all_4, [all(X == [[[1,3], [2,2], [3,1]]])]) :- 
     sum_pairs(4, X).
 test(all_7, [all(X == [[[1,6], [2,5], [3,4], [4, 3], [5, 2], [6, 1]]])]) :- 
