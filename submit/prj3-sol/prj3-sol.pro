@@ -44,7 +44,7 @@ procedures.
 % as in IntList.
 % *Restriction*: cannot use recursion.
 % *Hint*:  use a Prolog built-in which was covered in class.
-greater_than_element(_IntList, _N, _Z) :- member(_Z, _IntList), _Z @> _N.
+greater_than_element(IntList, N, Z) :- member(Z, IntList), Z @> N.
 
 % #2: "10-points"
 % greater_thans(IntList, N, GtList): GtList is a sub-list of
@@ -54,24 +54,24 @@ greater_than_element(_IntList, _N, _Z) :- member(_Z, _IntList), _Z @> _N.
 % in IntList.
 % Hint: `X =< Y` can be used to check if `X` is less-than-or-equal-to `Y`.
 greater_thans([], _, []).
-greater_thans(_IntList, _N, _GtList) :- [Head|Tail]=_IntList, Head @> _N, greater_thans(Tail, _N, Rtn), [Head|Rtn] = _GtList.
-greater_thans(_IntList, _N, _GtList) :- [Head|Tail]=_IntList, Head @=< _N, greater_thans(Tail, _N, Rtn), Rtn = _GtList.
+greater_thans(IntList, N, GtList) :- [Head|Tail]=IntList, Head @> N, greater_thans(Tail, N, Rtn), [Head|Rtn] = GtList.
+greater_thans(IntList, N, GtList) :- [Head|Tail]=IntList, Head @=< N, greater_thans(Tail, N, Rtn), Rtn = GtList.
 
 % #3: "10-points"
 % List is a list consisting of N Fill elements.
-fill_list(0, _Fill, []).
-fill_list(_N, _Fill, _List):- _N @> 0, _M is _N - 1, fill_list(_M, _Fill, Rtn), [_Fill|Rtn] = _List.
+fill_list(0, Fill, []).
+fill_list(N, Fill, List):- N @> 0, M is N - 1, fill_list(M, Fill, Rtn), [Fill|Rtn] = List.
 
 % #4: 10-points"
 % rm_prefix(List, X, ListZ): ListZ matches List without its prefix of
 % all elements which match X.
 rm_prefix([], _, []).
-rm_prefix(_List, _X, _ListZ):- [Head|Tail]=_List, Head = _X, rm_prefix(Tail, _X, Rtn), Rtn = _ListZ.
-rm_prefix(_List, _X, _ListZ):- [Head|Tail]=_List, Head \= _X, _List = _ListZ.
+rm_prefix(List, X, ListZ):- [Head|Tail]=List, Head = X, rm_prefix(Tail, X, Rtn), Rtn = ListZ.
+rm_prefix(List, X, ListZ):- [Head|Tail]=List, Head \= X, List = ListZ.
 
 % #5: "5-points"
 % ListZ is List with any suffix elements equal to End removed.
-rm_suffix(_List, _X, _ListZ):- reverse(_List, RevList), rm_prefix(RevList, _X, TrimmedList), reverse(TrimmedList, _ListZ).
+rm_suffix(List, X, ListZ):- reverse(List, RevList), rm_prefix(RevList, X, TrimmedList), reverse(TrimmedList, ListZ).
 
 
 % #6: 15-points
@@ -92,13 +92,13 @@ rm_suffix(_List, _X, _ListZ):- reverse(_List, RevList), rm_prefix(RevList, _X, T
 % Vocab.  Vocab is a list of Prolog terms of the form:
 % adjective(ADJECTIVE), article(ARTICLE), noun(NOUN), verb(VERB).
 % Hint: use member/2 and append/3.
-sentence(_Vocab, _Sentence):- noun_phrase(_Vocab, X), verb_phrase(_Vocab, Y), append(X, Y, _Sentence).
-noun_phrase(_Vocab, _NounPhrase):- member(article(X), _Vocab), member(adjective(Y), _Vocab), member(noun(Z), _Vocab), [X, Y, Z] = _NounPhrase.
-noun_phrase(_Vocab, _NounPhrase):- member(article(X), _Vocab), member(noun(Z), _Vocab), [X, Z] = _NounPhrase.
-noun_phrase(_Vocab, _NounPhrase):- member(adjective(X), _Vocab), member(noun(Z), _Vocab), [X, Z] = _NounPhrase.
-noun_phrase(_Vocab, _NounPhrase):- member(noun(Z), _Vocab), [Z] = _NounPhrase.
-verb_phrase(_Vocab, _VerbPhrase):- member(verb(X), _Vocab), [X] = VP, noun_phrase(_Vocab, NP), append(VP, NP, _VerbPhrase).
-verb_phrase(_Vocab, _VerbPhrase):- member(verb(X), _Vocab), [Y] = _VerbPhrase.
+sentence(Vocab, Sentence):- noun_phrase(Vocab, X), verb_phrase(Vocab, Y), append(X, Y, Sentence).
+noun_phrase(Vocab, NounPhrase):- member(article(X), Vocab), member(adjective(Y), Vocab), member(noun(Z), Vocab), [X, Y, Z] = NounPhrase.
+noun_phrase(Vocab, NounPhrase):- member(article(X), Vocab), member(noun(Z), Vocab), [X, Z] = NounPhrase.
+noun_phrase(Vocab, NounPhrase):- member(adjective(X), Vocab), member(noun(Z), Vocab), [X, Z] = NounPhrase.
+noun_phrase(Vocab, NounPhrase):- member(noun(Z), Vocab), [Z] = NounPhrase.
+verb_phrase(Vocab, VerbPhrase):- member(verb(X), Vocab), [X] = VP, noun_phrase(Vocab, NP), append(VP, NP, VerbPhrase).
+verb_phrase(Vocab, VerbPhrase):- member(verb(X), Vocab), [Y] = VerbPhrase.
 
 % #7: 10-points
 % sum_to(I, J, N): I, J and N are positive integers such that N = I + J.
@@ -107,16 +107,16 @@ verb_phrase(_Vocab, _VerbPhrase):- member(verb(X), _Vocab), [Y] = _VerbPhrase.
 % Answers must be generated in increasing order by I.
 % *Restriction*: must consist of a single rule.
 % *Hint*: use builtin between/3.
-sum_to(_I, _J, _N) :- X is _N-1, between(1, X, _I), _J is _N-_I.
+sum_to(I, J, N) :- succ(X, N), between(1, X, I), J is N-I.
 
 % #8: 10-points
 % sum_pairs(N, SumPairs): Given positive integer N, SumPairs is a list
 % of pairs [I, J] with I, J > 0 and I + J == N, ordered in increasing
 % order by I.
 % Hint: use an auxiliary recursive procedure.
-sum_pairs(_N, _SumPairs):- aux_sum_pairs(_N, 1, [], _SumPairs).
-aux_sum_pairs(_N, _N, _SumPairs, _SumPairs).
-aux_sum_pairs(_N, X, OaccList, _SumPairs):- sum_to(X, Y, _N), Xsucc is X+1, append(OaccList, [[X,Y]], NaccList), aux_sum_pairs(_N, Xsucc, NaccList, _SumPairs).
+sum_pairs(N, SumPairs):- aux_sum_pairs(N, 1, [], SumPairs).
+aux_sum_pairs(N, N, SumPairs, SumPairs).
+aux_sum_pairs(N, X, OaccList, SumPairs):- sum_to(X, Y, N), Xsucc is X+1, append(OaccList, [[X,Y]], NaccList), aux_sum_pairs(N, Xsucc, NaccList, SumPairs).
 
 % #9: 10-points
 % poly_coeffs(Poly, Var, Coeffs): Given a polynomial
@@ -124,7 +124,10 @@ aux_sum_pairs(_N, X, OaccList, _SumPairs):- sum_to(X, Y, _N), Xsucc is X+1, appe
 % Coeffs is the list [C0, C1, C2, ..., CN].
 % Note that Poly is guaranteed to contain all powers 0..N of Var.
 % Hint: + is left-associative.
-poly_coeffs(_Poly, _Var, _Coeffs):- 'TODO'.
+poly_coeffs(Poly, Var, Coeffs):- aux_poly_coeffs(Poly, Var, [], Coeffs).
+aux_poly_coeffs(Poly, Var, OaccList, Coeffs):- *(Coeff, Exp) = Poly, **(Var,_)=Exp, append(OaccList, [Coeff], NaccList), NaccList = Coeffs.
+aux_poly_coeffs(Poly, Var, OaccList, Coeffs):- +(Rest, X) = Poly, *(Coeff, Exp) = X, **(Var,_)=Exp, append(OaccList, [Coeff], NaccList), aux_poly_coeffs(Rest, Var, NaccList, Coeffs).
+
 
 % #10: 15-points
 % left_assoc(PlusTerm, LeftAssocTerm): PlusTerm is a Prolog term
@@ -134,4 +137,6 @@ poly_coeffs(_Poly, _Var, _Coeffs):- 'TODO'.
 % *Hints*:
 %    A + (B + C) ==> (A + B) + C.
 %    integer/1 succeeds if its argument is an integer
-left_assoc(_PlusTerm, _LeftAssocTerm):- 'TODO'.
+%left_assoc(PlusTerm, LeftAssocTerm):- +(A,D)=PlusTerm, integer(A), integer(D), +(A,D) = LeftAssocTerm.
+%left_assoc(PlusTerm, LeftAssocTerm):- +(A,D)=PlusTerm, integer(A), left_assoc(D, RtnVal), +(A,RtnVal) = LeftAssocTerm. 
+%left_assoc(PlusTerm, LeftAssocTerm):- +(A,D)=PlusTerm, integer(D), left_assoc(A, RtnVal), +(RtnVal,D) = LeftAssocTerm.

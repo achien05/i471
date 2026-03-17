@@ -186,7 +186,7 @@ test(one, [all(X = [[]])]) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% poly_coeffs/3 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-:- begin_tests(poly_coeffs, [blocked('TODO')]).
+:- begin_tests(poly_coeffs, []).
 test(poly_3_2_1_0, [all(X == [[0, 1, 2, 3]])]) :- 
     poly_coeffs(3*x**3 + 2*x**2 + 1*x**1 + 0*x**0, x, X).
 test(poly_7_3_5_2_6, [all(X == [[6, 2, 5, 3, 7]])]) :- 
