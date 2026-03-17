@@ -59,7 +59,7 @@ greater_thans(IntList, N, GtList) :- [Head|Tail]=IntList, Head @=< N, greater_th
 
 % #3: "10-points"
 % List is a list consisting of N Fill elements.
-fill_list(0, Fill, []).
+fill_list(0, _, []).
 fill_list(N, Fill, List):- N @> 0, M is N - 1, fill_list(M, Fill, Rtn), [Fill|Rtn] = List.
 
 % #4: 10-points"
@@ -67,7 +67,7 @@ fill_list(N, Fill, List):- N @> 0, M is N - 1, fill_list(M, Fill, Rtn), [Fill|Rt
 % all elements which match X.
 rm_prefix([], _, []).
 rm_prefix(List, X, ListZ):- [Head|Tail]=List, Head = X, rm_prefix(Tail, X, Rtn), Rtn = ListZ.
-rm_prefix(List, X, ListZ):- [Head|Tail]=List, Head \= X, List = ListZ.
+rm_prefix(List, X, ListZ):- [Head|_]=List, Head \= X, List = ListZ.
 
 % #5: "5-points"
 % ListZ is List with any suffix elements equal to End removed.
@@ -98,7 +98,7 @@ noun_phrase(Vocab, NounPhrase):- member(article(X), Vocab), member(noun(Z), Voca
 noun_phrase(Vocab, NounPhrase):- member(adjective(X), Vocab), member(noun(Z), Vocab), [X, Z] = NounPhrase.
 noun_phrase(Vocab, NounPhrase):- member(noun(Z), Vocab), [Z] = NounPhrase.
 verb_phrase(Vocab, VerbPhrase):- member(verb(X), Vocab), [X] = VP, noun_phrase(Vocab, NP), append(VP, NP, VerbPhrase).
-verb_phrase(Vocab, VerbPhrase):- member(verb(X), Vocab), [Y] = VerbPhrase.
+verb_phrase(Vocab, VerbPhrase):- member(verb(X), Vocab), [X] = VerbPhrase.
 
 % #7: 10-points
 % sum_to(I, J, N): I, J and N are positive integers such that N = I + J.
