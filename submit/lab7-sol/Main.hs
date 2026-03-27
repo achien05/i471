@@ -63,12 +63,12 @@ testBoundedShapes =
 --   Run:   run these tests when no tests are marked Only.
 --   Skip:  skip these tests.
 allTests = [
-    (Skip testFact),
-    (Skip testPoly2), 
-    (Skip testThrd), 
-    (Skip testShapesArea),
-    (Skip testShapesPerim),
-    (Skip testBoundedShapes) 
+    (Run testFact),
+    (Run testPoly2), 
+    (Run testThrd), 
+    (Run testShapesArea),
+    (Run testShapesPerim),
+    (Run testBoundedShapes) 
   ]
 
 
