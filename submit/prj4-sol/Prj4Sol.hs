@@ -18,8 +18,7 @@ import Text.Read   -- for readMaybe
 -- *Hint*: [1..] returns all integers starting with 1
 
 oddSquares :: [Int]
-oddSquares =
-  [] -- TODO
+oddSquares = [(x * x) | x <- [1..], odd (x * x)]
 
 
 --------------------------- countDistincts ------------------------------
@@ -34,29 +33,28 @@ oddSquares =
 -- *Hint*: use group, map, sort.
 
 countDistincts :: Ord a => [a] -> [(a, Int)]
-countDistincts ls =
-  [] -- TODO
+countDistincts ls = zip (map head $ sortBy compare $ group $ sort ls) (map length $ sortBy compare $ group $ sort ls)
 
 ---------------------------------- scan ---------------------------------
 
 data OpInfo =
-  Op (String, (Int->Int->Int))
+  Op (String, (Int->Int->Int))  --talks about operators
 
 data Token =
-  BinOp (String, Int->Int->Int) |
+  BinOp (String, Int->Int->Int) | --token is either BinOp, a Val, or an Unknown
   Val Int |
   Unknown String
 
 instance Show Token where
-  show (BinOp (str, _)) = "(BinOp \"" ++ str ++ "\")"
-  show (Val int) = "(Val " ++ show int ++ ")"
-  show (Unknown str) = "(Unknown \"" ++ str ++ "\")"
+  show (BinOp (str, _)) = "(BinOp \"" ++ str ++ "\")"   --BinOp printed as '(Binop "str")'
+  show (Val int) = "(Val " ++ show int ++ ")"           --Val printed as '(Val int)'
+  show (Unknown str) = "(Unknown \"" ++ str ++ "\")"    --Unknown printed as '(Unknown "str")'
 
 instance Eq Token where
-  (BinOp (str1, _)) == (BinOp (str2, _)) = str1 == str2
-  (Val int1) == (Val int2) = int1 == int2
-  (Unknown str1) == (Unknown str2) = str1 == str2
-  _ == _ = False
+  (BinOp (str1, _)) == (BinOp (str2, _)) = str1 == str2 --if str of BinOps match, then str1 = str2
+  (Val int1) == (Val int2) = int1 == int2               --if vals match, then val1 = val2
+  (Unknown str1) == (Unknown str2) = str1 == str2       --if unknown strs match, then str1=str2
+  _ == _ = False                                        --
 
 
 -- #3: "15-points"
@@ -74,10 +72,14 @@ instance Eq Token where
 -- the mapping function can return either a Val or Unknown token.
 
 scan:: String -> [Token]
-scan str =
-  [] -- TODO
-    
-  
+scan str = map mappingFunction (words str)
+  where mappingFunction word = case (find (\(BinOp(x, _)) -> x == word) [BinOp("+", (+)), BinOp("-", (-)), BinOp("*", (*)), BinOp("/", (div))]) of 
+          Just ops -> ops
+          otherwise -> case(readMaybe word :: Maybe Int) of
+            Just inte -> Val inte
+            otherwise -> Unknown word
+
+
 ----------------------------evalPrefixExpr ------------------------------
 
 -- A prefix expression is defined by the following grammar:
@@ -119,9 +121,27 @@ scan str =
 --     snd of the pair is not [], then return Nothing, otherwise
 --     return (Just val) where val is fst of the pair.
 
+
+
 evalPrefixExpr:: String -> Maybe Int
-evalPrefixExpr str =
-  Nothing -- TODO
+evalPrefixExpr str = let toks = scan str
+  in case toks of
+    [] -> Nothing
+    otherwise -> case (find (\x -> case x of (Unknown _)-> True; otherwise -> False) toks) of
+      Just x  -> Nothing
+      otherwise -> case (eval toks) of
+        Just (x, []) -> Just x
+        otherwise -> Nothing
+
+eval:: [Token] -> Maybe (Int, [Token])
+eval [] = do
+  Nothing
+eval (Val x:y) = do
+  Just (x, y)
+eval (BinOp (x, y):z) = do
+  a <- eval(z)
+  b <- eval(snd a)
+  if ((x == "/") && (fst b == 0)) then Nothing else Just (y (fst a) (fst b), snd b)
 
 ------------------------------ firstOk ----------------------------------
 

@@ -197,10 +197,10 @@ testMatch = do
 --   Run:   run these tests when no tests are marked Only.
 --   Skip:  skip these tests.
 allTests = [
-    (Skip testOddSquares),
-    (Skip testCountDistincts),
-    (Skip testScan),
-    (Skip testEvalPrefixExpr),
+    (Run testOddSquares),
+    (Run testCountDistincts),
+    (Run testScan),
+    (Run testEvalPrefixExpr),
     (Skip testFirstOk),
     (Skip testAllMatches),
     (Skip testMatchAt),
