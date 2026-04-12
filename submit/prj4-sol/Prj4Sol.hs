@@ -154,8 +154,10 @@ eval (BinOp (x, y):z) = do
 -- Nothing if there is no such element.
 
 firstOk :: (a -> Maybe b) -> [a] -> Maybe (a, b)
-firstOk fn ls =
-  Nothing -- TODO
+firstOk fn ls = evaluateFn ls
+  where evaluateFn ls = if length ls == 0 then Nothing else case fn (head ls) of 
+          Just x -> Just((head ls), x)
+          otherwise -> evaluateFn (tail ls)
 
 ----------------------------- allMatches --------------------------------
 

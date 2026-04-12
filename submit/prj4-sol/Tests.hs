@@ -201,7 +201,7 @@ allTests = [
     (Run testCountDistincts),
     (Run testScan),
     (Run testEvalPrefixExpr),
-    (Skip testFirstOk),
+    (Run testFirstOk),
     (Skip testAllMatches),
     (Skip testMatchAt),
     (Skip testMatch)
