@@ -200,8 +200,16 @@ type MatchResult =       -- result for matching a regex at the start of a string
 --     matches (Cat regex (Rep regex)) or matches the empty prefix.
 
 allMatches :: String -> Regex -> [MatchResult]
-allMatches str regex =
-  [] -- TODO
+allMatches str regex = 
+  case regex of
+    (Str x) -> if (isPrefixOf x str) then [(x, drop (length x) str)] else []
+    (Cat x y) -> [((fst xEle) ++ (fst bothEle), snd bothEle) | xEle <- allMatches str x, bothEle <- allMatches (snd xEle) y]
+    (Alt x y) -> let xMatch = (allMatches str x) in xMatch ++ [y | y <- allMatches str y, (not (isElementOf y xMatch))]
+    (Rep x) -> allMatches str (Cat x (Rep x)) ++ allMatches str (Str "")
+
+isElementOf:: MatchResult -> [MatchResult] -> Bool
+isElementOf _ [] = False
+isElementOf val (x:xs) = (val == x) && isElementOf val xs
 
 -------------------------------matchAt ----------------------------------
 
@@ -213,8 +221,7 @@ allMatches str regex =
 -- Just first matching string.  Otherwise return Nothing.
 
 matchAt:: String -> Regex -> Maybe String
-matchAt str regex =
-  Nothing -- TODO
+matchAt str regex = if length (allMatches str regex) == 0 then Nothing else Just (fst ((allMatches str regex) !! 0))
 
 --------------------------------- match ---------------------------------
 
@@ -227,6 +234,8 @@ matchAt str regex =
 -- *Hints*: use firstOk and matchAt to scan over indexes in str.
 
 match:: String -> Regex -> Maybe (Int, String)  
-match str regex =
-  Nothing -- TODO
-  
+match str regex = firstOk findMatch [0..((length str)-1)]
+  where findMatch idx = case matchAt (drop idx str) regex of
+          Just x -> Just x
+          otherwise -> Nothing
+

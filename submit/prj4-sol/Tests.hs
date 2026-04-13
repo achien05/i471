@@ -202,9 +202,9 @@ allTests = [
     (Run testScan),
     (Run testEvalPrefixExpr),
     (Run testFirstOk),
-    (Skip testAllMatches),
-    (Skip testMatchAt),
-    (Skip testMatch)
+    (Run testAllMatches),
+    (Run testMatchAt),
+    (Run testMatch)
   ]
 
 
