@@ -1,0 +1,6 @@
+*/prj5_tests.erl
+.gitignore
+.zipignore
+*.beam
+*~
+*.bak
