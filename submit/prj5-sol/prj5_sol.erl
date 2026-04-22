@@ -46,16 +46,16 @@ assoc({new, Default}) ->
   [Default];
 assoc({put, Assoc, Key, Val}) ->
   Assoc ++ [{Key, Val}];
-assoc({get, [], _}) ->
+assoc({get, [], _}) ->                    %fail condition
   fail;
-assoc({get, [{Key, Val}|_T], Key}) ->
+assoc({get, [{Key, Val}|_T], Key}) ->     %find condition
   Val;
-assoc({get, [{_Ki, _Val}|T], Key}) ->
+assoc({get, [{_Ki, _Val}|T], Key}) ->     %default always first, go to below rule, then this is for recursion
   assoc({get, T, Key});
-assoc({get, [H|T], Key}) ->
-  X=assoc({get, lists:reverse(T), Key}),
-  if  (X =/= fail) -> X;
-      true -> H
+assoc({get, [Default|T], Key}) ->               %initially starts w/ default, triggers here
+  X=assoc({get, lists:reverse(T), Key}),  %reverse to find the last match
+  if  (X =/= fail) -> X;                  %determines if found or failed, if found return found Val
+      true -> Default                     %if failed return default
   end.
 
 %------------------------------ arith0/2 --------------------------------
@@ -97,29 +97,17 @@ arith0({BinOp, Atom, Expr}, Env) when (BinOp =:= assign) and is_atom(Atom) ->
   {X1,Env2} = arith0(Expr, Env),
   {X1, assoc({put, Env2, Atom, X1})};
 arith0({BinOp, Expr1, Expr2}, Env) when (BinOp =:= add) ->
-  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, Env),
-  if  (Y2 =/= Env) -> {X1+Y1, Y2};
-      (X2 =/= Env) -> {X1+Y1, X2};
-      true -> {X1+Y1, Env}
-  end;
+  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, X2),
+  {X1 + Y1, Y2};
 arith0({BinOp, Expr1, Expr2}, Env) when (BinOp =:= sub) ->
-  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, Env),
-  if  (Y2 =/= Env) -> {X1-Y1, Y2};
-      (X2 =/= Env) -> {X1-Y1, X2};
-      true -> {X1-Y1, Env}
-  end; 
+  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, X2),
+  {X1 - Y1, Y2}; 
 arith0({BinOp, Expr1, Expr2}, Env) when (BinOp =:= mul) ->
-  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, Env),
-  if  (Y2 =/= Env) -> {X1*Y1, Y2};
-      (X2 =/= Env) -> {X1*Y1, X2};
-      true -> {X1*Y1, Env}
-  end; 
+  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, X2),
+  {X1 * Y1, Y2}; 
 arith0({BinOp, Expr1, Expr2}, Env) when (BinOp =:= divv) ->
-  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, Env),
-  if  (Y2 =/= Env) and (Y1 /= 0) -> {X1 div Y1, Y2};
-      (X2 =/= Env) and (Y1 /= 0) -> {X1 div Y1, X2};
-      true -> {X1 div Y1, Env}
-  end.
+  {X1,X2} = arith0(Expr1, Env), {Y1,Y2} = arith0(Expr2, X2),
+  {X1 div Y1, Y2}.
 
 %------------------------------ arith1/2 --------------------------------
 
@@ -144,29 +132,17 @@ arith1({BinOp, Atom, Expr}, Env) when (BinOp =:= assign) and is_atom(Atom) ->
   {X1,Env2} = arith1(Expr, Env),
   {X1, assoc({put, Env2, Atom, X1})};
 arith1({BinOp, Expr1, Expr2}, Env) when (BinOp =:= add) ->
-  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, Env),
-  if  (Y2 =/= Env) -> {X1+Y1, Y2};
-      (X2 =/= Env) -> {X1+Y1, X2};
-      true -> {X1+Y1, Env}
-  end;
+  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, X2),
+  {X1+Y1, Y2};
 arith1({BinOp, Expr1, Expr2}, Env) when (BinOp =:= sub) ->
-  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, Env),
-  if  (Y2 =/= Env) -> {X1-Y1, Y2};
-      (X2 =/= Env) -> {X1-Y1, X2};
-      true -> {X1-Y1, Env}
-  end; 
+  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, X2),
+  {X1-Y1, Y2};
 arith1({BinOp, Expr1, Expr2}, Env) when (BinOp =:= mul) ->
-  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, Env),
-  if  (Y2 =/= Env) -> {X1*Y1, Y2};
-      (X2 =/= Env) -> {X1*Y1, X2};
-      true -> {X1*Y1, Env}
-  end; 
+  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, X2),
+  {X1*Y1, Y2};
 arith1({BinOp, Expr1, Expr2}, Env) when (BinOp =:= divv) ->
-  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, Env),
-  if  (Y2 =/= Env) and (Y1 /= 0) -> {X1 div Y1, Y2};
-      (X2 =/= Env) and (Y1 /= 0) -> {X1 div Y1, X2};
-      true -> {X1 div Y1, Env}
-  end.
+  {X1,X2} = arith1(Expr1, Env), {Y1,Y2} = arith1(Expr2, X2),
+  {X1 div Y1, Y2}.
 
 %----------------------------- make_server/2 ----------------------------
 
@@ -208,36 +184,38 @@ arith1({BinOp, Expr1, Expr2}, Env) when (BinOp =:= divv) ->
 %  *Hints*: Use an auxiliary function which is run by the server process.
 %
 make_server(Fn, State) -> 
-  AuxFunc = fun AuxFunc(AuxFn, AuxState, Exceptions) -> receive
-    {ClientPid, {req, Request}} ->
-      try Fn(Request, State) of
-        {Response, NewState} -> ClientPid ! {response, Response}, AuxFunc(AuxFn, NewState, Exceptions)
-      catch
-        throw:X -> ClientPid ! {exception, {throw, X}}, AuxFunc(AuxFn, AuxState, Exceptions ++ [{throw, X}]);
-        exit:X -> ClientPid ! {exception, {exit, X}}, AuxFunc(AuxFn, AuxState, Exceptions ++ [{exit, X}]);
-        error:X -> ClientPid ! {exception, {error, X}}, AuxFunc(AuxFn, AuxState, Exceptions ++ [{error, X}])
-      end;
-    {ClientPid, {upgrade, Fn1}} ->
-      ClientPid ! {upgraded, Fn},
-      AuxFunc(Fn1, State, Exceptions);
-    {ClientPid, {stop}}->
-      ClientPid ! {stop, Exceptions},
-      true
-    end
-  end,
-  ServerPid = spawn(AuxFunc, Fn, State, []),
+  ServerPid = spawn(fun() -> auxFunc(Fn, State, []) end),  
   RtnFunc = fun(ReqPair)->
     case ReqPair of
       {req, Request} -> ServerPid ! {self(), {req, Request}},
-        receive {response, Response} -> {response, Response};
+        receive {result, Response} -> {result, Response};
                 {exception, Exception} -> {exception, Exception}
         end;
       {upgrade, Fn1} -> ServerPid ! {self(), {upgrade, Fn1}},
-        receive {upgraded, Fn} -> {upgraded, Fn} end;
+        receive {upgraded, OldFn} -> {upgraded, OldFn} end;
       {stop} -> ServerPid ! {self(), {stop}},
-        receive {stop, ExceptionList} -> {stop, ExceptionList} end
+        receive {stopped, ExceptionList} -> {stopped, ExceptionList} end
     end
   end,
   {ServerPid, RtnFunc}.
+
+auxFunc(Fn, State, Exceptions) -> receive
+    {ClientPid, {req, Request}} ->
+      try Fn(Request, State) of
+        {Response, NewState} -> ClientPid ! {result, Response}, auxFunc(Fn, NewState, Exceptions)
+      catch
+        throw:X -> ClientPid ! {exception, {throw, X}}, auxFunc(Fn, State, Exceptions ++ [{throw, X}]);
+        exit:X -> ClientPid ! {exception, {exit, X}}, auxFunc(Fn, State, Exceptions ++ [{exit, X}]);
+        error:X -> ClientPid ! {exception, {error, X}}, auxFunc(Fn, State, Exceptions ++ [{error, X}])
+      end;
+    {ClientPid, {upgrade, Fn1}} ->
+      ClientPid ! {upgraded, Fn},
+      auxFunc(Fn1, State, Exceptions);
+    {ClientPid, {stop}}->
+      ClientPid ! {stopped, Exceptions},
+      true
+    end.
+  
+
 
 
