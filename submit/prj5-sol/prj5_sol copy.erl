@@ -137,9 +137,6 @@ arith1(Expr, Env) when is_integer(Expr) ->
   {Expr, Env};
 arith1(Expr, Env) when is_atom(Expr) ->
   {assoc({get, Env, Expr}), Env};
-arith1({UnaOp, Expr}, Env) when (UnaOp =:= uminus) ->
-  {X1,_} = arith1(Expr, Env),
-  {X1*(-1), Env};
 arith1({BinOp, Atom, Expr}, Env) when (BinOp =:= assign) and is_atom(Atom) ->
   {X1,Env2} = arith1(Expr, Env),
   {X1, assoc({put, Env2, Atom, X1})};
@@ -207,37 +204,4 @@ arith1({BinOp, Expr1, Expr2}, Env) when (BinOp =:= divv) ->
 %
 %  *Hints*: Use an auxiliary function which is run by the server process.
 %
-make_server(Fn, State) -> 
-  AuxFunc = fun AuxFunc(AuxFn, AuxState, Exceptions) -> receive
-    {ClientPid, {req, Request}} ->
-      try Fn(Request, State) of
-        {Response, NewState} -> ClientPid ! {response, Response}, AuxFunc(AuxFn, NewState, Exceptions)
-      catch
-        throw:X -> ClientPid ! {exception, {throw, X}}, AuxFunc(AuxFn, AuxState, Exceptions ++ [{throw, X}]);
-        exit:X -> ClientPid ! {exception, {exit, X}}, AuxFunc(AuxFn, AuxState, Exceptions ++ [{exit, X}]);
-        error:X -> ClientPid ! {exception, {error, X}}, AuxFunc(AuxFn, AuxState, Exceptions ++ [{error, X}])
-      end;
-    {ClientPid, {upgrade, Fn1}} ->
-      ClientPid ! {upgraded, Fn},
-      AuxFunc(Fn1, State, Exceptions);
-    {ClientPid, {stop}}->
-      ClientPid ! {stop, Exceptions},
-      true
-    end
-  end,
-  ServerPid = spawn(AuxFunc, Fn, State, []),
-  RtnFunc = fun(ReqPair)->
-    case ReqPair of
-      {req, Request} -> ServerPid ! {self(), {req, Request}},
-        receive {response, Response} -> {response, Response};
-                {exception, Exception} -> {exception, Exception}
-        end;
-      {upgrade, Fn1} -> ServerPid ! {self(), {upgrade, Fn1}},
-        receive {upgraded, Fn} -> {upgraded, Fn} end;
-      {stop} -> ServerPid ! {self(), {stop}},
-        receive {stop, ExceptionList} -> {stop, ExceptionList} end
-    end
-  end,
-  {ServerPid, RtnFunc}.
-
-
+make_server(_Fn, _State) -> 'TODO'.

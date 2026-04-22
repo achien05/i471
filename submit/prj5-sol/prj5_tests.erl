@@ -18,13 +18,14 @@
 %% down past tests for completed code.
 %% Enable all tests before submission.
 
--if(false).  
+
 
   -define(test_assoc, enabled).
   -define(test_arith0, enabled).
   -define(test_arith1, enabled).
   -define(test_make_server, enabled).
 
+-if(false).  
 -endif.
 
 %------------------------------ assoc/1 ---------------------------------
