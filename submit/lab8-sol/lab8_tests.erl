@@ -18,12 +18,12 @@
 %% down past tests for completed code.
 %% Enable all tests before submission.
 
--if(false).  
+ 
 
   -define(test_points_letter_grade, enabled).
   -define(test_grades_letter_grade, enabled).
   -define(test_grades_server, enabled).
-
+-if(false). 
 -endif.
 
 %----------------------- points_letter_grade/1 --------------------------

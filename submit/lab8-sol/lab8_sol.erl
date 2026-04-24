@@ -37,12 +37,21 @@ guard_perimeter({_, Type, Dims}) when Type =:= rectangle ->
 %----------------------- points_letter_grade/1 --------------------------
 
 % see lab assignment for specs
-points_letter_grade(_Points) -> 'TODO'.
+points_letter_grade(Points) when Points >= 90 ->
+'A';
+points_letter_grade(Points) when Points >= 80 ->
+'B';
+points_letter_grade(Points) when Points >= 70 ->
+'C';
+points_letter_grade(Points) when Points >= 60 ->
+'D';
+points_letter_grade(_Points) ->
+'F'.
 
 %----------------------- grades_letter_grade/1 --------------------------
 
 % see lab assignment for specs
-grades_letter_grade(_Grade) -> 'TODO'.
+grades_letter_grade(Grade) -> {_,_,_,Points} = Grade, points_letter_grade(Points).
 
 %------------------------ shapes_server_fn ------------------------------
 
@@ -103,17 +112,33 @@ send_shapes_msg(Pid, Msg) ->
 %      Recurse after logging an error on `standard_error`.
 %
 % *Hint*: structure your code similar to shapes_server_fn/1.
-grades_server_fn(_Grades) -> 'TODO'.
-
+grades_server_fn(Grades) -> 
+	receive
+		{ClientPid, {letter_grades}} ->
+			LetterGrades = [{StudentId, AssignId, grades_letter_grade(Grade)} || Grade <- Grades, StudentId <- [element(1,Grade)], AssignId <- [element(3,Grade)]],
+			ClientPid ! {self(), letter_grades, LetterGrades},
+			grades_server_fn(Grades);
+		{ClientPid, {new_grades, NewGrades}}->
+			ClientPid ! {self(), new_grades},
+			grades_server_fn(NewGrades);
+		{ClientPid, {stop}}->	
+			ClientPid ! {self(), stopped};
+		Unknown ->
+			io:format(standard_error, "unknown message ~p~n", [ Unknown ]),
+			grades_server_fn(Grades)
+	end.
 % Spawn a new server process running `grades_server_fn(Grades) where
 % Grades is a list of `{ StudentId, Category, AssignId, Points }`.
 % Returns PID of newly created server.
-start_grades_server(_Grades) -> 'TODO'.
+start_grades_server(Grades) ->
+	spawn(lab8_sol, grades_server_fn, [Grades]).
 
 % Send Msg to server process `Pid`.
-send_grades_msg(_Pid, _Msg) -> 'TODO'.
-    
-
+send_grades_msg(Pid, Msg) ->
+	Pid ! {self(), Msg},
+	receive
+		X -> X
+	end.
 
 %------------------------------- Shapes Data ----------------------------
 shapes1() ->
