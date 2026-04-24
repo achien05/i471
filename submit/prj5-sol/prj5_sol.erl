@@ -213,7 +213,10 @@ auxFunc(Fn, State, Exceptions) -> receive
       auxFunc(Fn1, State, Exceptions);
     {ClientPid, {stop}}->
       ClientPid ! {stopped, Exceptions},
-      true
+      true;
+    Unknown -> 
+    	io:format(standard_error, "unknown message ~p~n", [ Unknown ]),
+    	auxFunc(Fn, State, Exceptions)   
     end.
   
 
