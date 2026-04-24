@@ -1,0 +1,6 @@
+*/lab8_tests.erl
+.gitignore
+.zipignore
+*.beam
+*~
+*.bak
